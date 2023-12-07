@@ -9,13 +9,7 @@ public class IntegerDivision {
         dividend = Math.abs(dividend);
         divisor = Math.abs(divisor);
 
-        if (divisor == 0) {
-            throw new IllegalArgumentException("Divisor can't be 0");
-        }
-
-        if (dividend < divisor) {
-            throw new IllegalArgumentException("Dividend can't be less than divisor");
-        }
+        validateNumbers(divisor, dividend);
 
         String[] digits = String.valueOf(dividend).split("");
         int reminderNumber;
@@ -54,11 +48,21 @@ public class IntegerDivision {
         return result.toString();
     }
 
-    public String createDivisor(Integer multiplyResult, Integer tab) {
+    private void validateNumbers(int divisor, int dividend){
+        if (divisor == 0) {
+            throw new IllegalArgumentException("Divisor can't be 0");
+        }
+
+        if (dividend < divisor) {
+            throw new IllegalArgumentException("Dividend can't be less than divisor");
+        }
+    }
+
+    private String createDivisor(Integer multiplyResult, Integer tab) {
         return assemblyString(tab, ' ') + assemblyString(calculateDigit(multiplyResult), '-');
     }
 
-    public int calculateDigit(int i) {
+    private int calculateDigit(int i) {
         if (i == 0) {
             return 1;
         }
@@ -66,7 +70,7 @@ public class IntegerDivision {
         return (int) Math.log10(i) + 1;
     }
 
-    public String assemblyString(int numberOfSymbols, char symbol) {
+    private String assemblyString(int numberOfSymbols, char symbol) {
         if (numberOfSymbols < 0) {
             throw new IllegalArgumentException("Number of symbols cannot be negative");
         }
@@ -78,8 +82,7 @@ public class IntegerDivision {
         return resultingString.toString();
     }
 
-
-    public void modifyResultView(Integer dividend, Integer divisor) {
+    private void modifyResultView(Integer dividend, Integer divisor) {
         int[] index = new int[3];
 
         int j = 0;
@@ -95,7 +98,7 @@ public class IntegerDivision {
         }
 
         int tab = calculateDigit(dividend) + 1 - index[0];
-        result.insert(index[2], assemblyString(tab, ' ') + "│" + quotient.toString());
+        result.insert(index[2], assemblyString(tab, ' ') + "│" + quotient);
         result.insert(index[1], assemblyString(tab, ' ') + "│" + assemblyString(quotient.length(), '-'));
         result.insert(index[0], "│" + divisor);
         result.replace(1, index[0], dividend.toString());

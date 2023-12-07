@@ -2,10 +2,9 @@ package ua.foxminded;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.CsvSource;
 
 import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.function.Executable;
 
 class IntegerDivisionTest {
 
@@ -18,8 +17,14 @@ class IntegerDivisionTest {
 
     @Test
     void createLongDivision_when_divisor0_thenIllegalArgumentException() {
-        assertThrows(IllegalArgumentException.class, () ->
-                division.getIntegerDivision(10, 0));
+        Executable operation = () -> division.getIntegerDivision(10, 0);
+        assertThrows(IllegalArgumentException.class, operation, "Divisor can't be 0");
+    }
+
+    @Test
+    void createLongDivision_when_dividendSmallerDivisor_thenIllegalArgumentException() {
+        Executable operation = () -> division.getIntegerDivision(3, 4);
+        assertThrows(IllegalArgumentException.class, operation, "Dividend can't be less than divisor");
     }
 
     @Test
@@ -118,46 +123,5 @@ class IntegerDivisionTest {
         String actual = division.getIntegerDivision(752344896,423434);
         //then
         assertEquals(expected,actual);
-    }
-
-    @Test
-    void createLongDivision_when_dividendSmallerDivisor_thenIllegalArgumentException() {
-        assertThrows(IllegalArgumentException.class, () ->
-                division.getIntegerDivision(3, 4));
-    }
-
-    @ParameterizedTest
-    @CsvSource({
-            "1,0",
-            "1,9",
-            "2,10",
-            "3,100",
-            "4,1000",
-            "5,10000"})
-    void calculateDigit_when_number_then_correctNumberOfDigits(int expected, int actual) {
-        //when
-        actual = division.calculateDigit(actual);
-        //then
-        assertEquals(expected, actual);
-    }
-
-    @ParameterizedTest
-    @CsvSource({
-            "0, -, ''",
-            "1, -, '-'",
-            "4, -, '----'"
-    })
-    void assemblyString_when_number_then_CorrectString(int numberOfSymbols, char symbol, String expected) {
-        assertEquals(expected, division.assemblyString(numberOfSymbols, symbol));
-    }
-
-    @ParameterizedTest
-    @CsvSource({
-            "1000, 3, '   ----'",
-            "12345, 5, '     -----'",
-            "98, 2, '  --'"
-    })
-    void createDivisor_when_multiplyResultAndTab_then_CorrectString(int multiplyResult, int tab, String expected) {
-        assertEquals(expected, division.createDivisor(multiplyResult, tab));
     }
 }
